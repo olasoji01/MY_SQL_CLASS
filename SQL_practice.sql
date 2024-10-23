@@ -226,3 +226,62 @@ VALUES (10001),
 	   (30003);
 
 SELECT * FROM Orders_1
+
+-- ENFORCING CONSTRAINT
+-- ADDING A PRIMARY KEY CONSTRAINT TO AN EXISTING TABLE 
+CREATE TABLE Employee_2(
+		EmployeeID INT,
+		FirstName VARCHAR(50),
+		LastName VARCHAR(50)
+);
+
+SP_HELP Employee_2 -- to view the backend of your table 
+
+-- so while trying to add constraint primary key to the (employeeid) you cant add primary key constraint to a null column.
+
+ALTER TABLE Employee_2
+ALTER COLUMN EmployeeID INT NOT NULL;
+
+ALTER TABLE Employee_2
+ADD CONSTRAINT Pk_EmployeID PRIMARY KEY(EmployeeID);
+
+
+-- LOGICAL OPERATIONS 
+-- using the AND statement('AND' statement works only if the two conditions are correct)
+SELECT * FROM Employees
+		WHERE Salary > 60000 AND Departments = 'IT'
+
+-- using the OR statement('OR' statement works when one of the condition is correct)
+SELECT * FROM Employees
+		WHERE Salary > 30000 OR Departments = 'IT'
+
+-- using the NOT statement('NOT' statement is to filter out your conditions)
+SELECT * FROM Employees
+		WHERE NOT Departments = 'Finance' AND Salary > 50000
+
+-- using the IN statement('IN' statement is used to select multiple content)
+SELECT * FROM Employees
+		WHERE Departments IN ('HR', 'Marketing');
+
+-- using the BETWEEN statement
+SELECT * FROM Employees
+		WHERE Salary BETWEEN 40000 AND 60000;
+
+-- using the LIKE statement('LIKE' statement is used to select match patterns in a character)
+SELECT * FROM Employees
+		WHERE Salary LIKE '6%';
+
+SELECT * FROM Employees
+		WHERE FirstName NOT LIKE 'J%'
+
+SELECT * FROM Employees
+		WHERE FirstName LIKE '%ane%'
+
+SELECT * FROM Employees
+		WHERE FirstName LIKE '%s'
+
+SELECT * FROM Employees
+		WHERE FirstName LIKE '__n_';
+
+SELECT * FROM Employees
+		WHERE FirstName LIKE '_is_';

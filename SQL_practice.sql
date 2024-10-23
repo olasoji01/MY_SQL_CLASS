@@ -285,3 +285,37 @@ SELECT * FROM Employees
 
 SELECT * FROM Employees
 		WHERE FirstName LIKE '_is_';
+
+
+-- The CASE statement
+SELECT * FROM house_pricing_dataset
+
+SELECT MIN(price) FROM house_pricing_dataset
+WHERE price > 0;
+
+SELECT MAX(price) FROM house_pricing_dataset
+WHERE price > 0;
+
+SELECT TOP(2) * FROM house_pricing_dataset
+
+SELECT *,
+	CASE
+		WHEN price >= 7800 AND price <= 500000 THEN 'Affordable'
+		WHEN price >= 500000 AND price <= 5000000 THEN 'Executive'
+		WHEN price > 5000000 THEN 'Luxury'
+		ELSE 'T-painers'
+	END AS Lifestyle_status
+SELECT * FROM house_pricing_dataset
+
+WITH t1 AS (SELECT price, city,
+	CASE
+		WHEN price >= 7800 AND price <= 500000 THEN 'Affordable'
+		WHEN price > 500000 AND price <= 5000000 THEN 'Executive'
+		WHEN price > 5000000 THEN 'Luxury'
+		ELSE 'T-painers'
+	END AS Lifestyle_status
+FROM house_pricing_dataset)
+
+SELECT t1.price, t1.city, t1.Lifestyle_status
+FROM t1
+WHERE t1.Lifestyle_status = 'T-painers'

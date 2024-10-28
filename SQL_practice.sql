@@ -307,7 +307,7 @@ SELECT *,
 	END AS Lifestyle_status
 SELECT * FROM house_pricing_dataset
 
-WITH t1 AS (SELECT price, city,
+WITH table1 AS (SELECT price, city,
 	CASE
 		WHEN price >= 7800 AND price <= 500000 THEN 'Affordable'
 		WHEN price > 500000 AND price <= 5000000 THEN 'Executive'
@@ -316,6 +316,117 @@ WITH t1 AS (SELECT price, city,
 	END AS Lifestyle_status
 FROM house_pricing_dataset)
 
-SELECT t1.price, t1.city, t1.Lifestyle_status
-FROM t1
-WHERE t1.Lifestyle_status = 'T-painers'
+SELECT price, city, Lifestyle_status
+FROM table1
+WHERE Lifestyle_status = 'Affordable'
+ 
+ -- GROUP BY
+ SELECT TOP(10) * FROM house_pricing_dataset
+
+ SELECT city, AVG(price)
+	FROM  house_pricing_dataset GROUP BY city;
+
+ SELECT floors, AVG(price) AS Average_price
+	FROM  house_pricing_dataset GROUP BY floors;
+
+SELECT city,SUM(bathrooms) AS Sum_of_bathrooms
+	FROM house_pricing_dataset GROUP BY city;
+
+SELECT city, COUNT(bathrooms) AS count_of_bathrooms FROM house_pricing_dataset
+	WHERE yr_renovated > 2000
+		GROUP BY city
+		ORDER BY count_of_bathrooms DESC;
+
+-- the HAVING clause
+SELECT DISTINCT(condition) FROM house_pricing_dataset
+
+SELECT city, condition, AVG(price) AS average_price
+FROM house_pricing_dataset
+GROUP BY city, condition
+HAVING condition > 3
+
+SELECT ROUND(AVG(price), 2) AVG_price,
+	CASE
+		WHEN price >= 7800 AND price <= 500000 THEN 'Affordable'
+		WHEN price > 500000 AND price <= 5000000 THEN 'Executive'
+		WHEN price > 5000000 THEN 'Luxury'
+		ELSE 'T-painers'
+	END AS Lifestyle_status
+FROM house_pricing_dataset
+GROUP BY 
+	CASE 
+		WHEN price >= 7800 AND price <= 500000 THEN 'Affordable'
+		WHEN price > 500000 AND price <= 5000000 THEN 'Executive'
+		WHEN price > 5000000 THEN 'Luxury'
+		ELSE 'T-painers'
+	END
+ORDER BY AVG_price DESC;
+
+--CASE Advance Usage
+SELECT * FROM Employees
+
+UPDATE Employees
+SET Salary =
+	CASE 
+	  WHEN Departments = 'HR' THEN Salary * 1.02
+	  WHEN Departments = 'Finance' THEN Salary * 1.15
+	  WHEN Departments = 'Marketing' THEN Salary * 1.07
+	  WHEN Departments = 'IT' THEN Salary * 1.12
+	  ELSE Salary
+	END;
+
+-- SET OPERATORS
+INSERT INTO Employee_2(EmployeeID, FirstName, LastName)
+	  VALUES(4, 'Brian', 'Destiny'),
+			(5, 'Nathan', 'Smith'),
+			(6, 'Ruth', 'Bode'),
+			(7, 'Pelumi', 'Adebowale')
+
+--UNION(its more like full join)
+SELECT * FROM Employee_2
+UNION
+SELECT * FROM Employees_1
+
+--EXCEPT
+SELECT * FROM Employee_2
+EXCEPT
+SELECT * FROM Employees_1
+
+--INTERSECT(returns common rows from the both table)
+SELECT * FROM Employee_2
+INTERSECT
+SELECT * FROM Employees_1
+
+--CREATING ANOTHER TABLE 
+CREATE TABLE Employees_3(
+		EmployeeID INT PRIMARY KEY,
+		FirstName VARCHAR(50),
+		LastName VARCHAR(50)
+);
+INSERT INTO Employees_3(EmployeeID, FirstName, LastName)
+	  VALUES(4, 'Edafe', 'Boniface'),
+			(5, 'Nathan', 'Smith'),
+			(3, 'Bob', 'Johnson'),
+			(7, 'Pelumi', 'Adebowale')
+
+SELECT * FROM Employees_1
+INTERSECT
+SELECT * FROM Employees_3
+
+-- Combining two datasets or tables together using UNION
+
+SELECT * FROM bike_share_yr_0
+UNION
+SELECT * FROM bike_share_yr_1
+
+SELECT * FROM cost_table
+
+-- Using the WITH statement to join a third table to the UNION
+WITH T1 as (SELECT * FROM bike_share_yr_0
+UNION
+SELECT * FROM bike_share_yr_1)
+
+SELECT * FROM T1
+INNER JOIN 
+cost_table
+ON T1.yr = cost_table.yr
